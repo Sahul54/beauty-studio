@@ -1,3 +1,6 @@
+
+import { Suspense } from "react";
+
 import BookingBreadcrumb from "@/components/booking/BookingBreadcrumb";
 import BookingPageHeader from "@/components/booking/BookingPageHeader";
 import BookingForm from "@/components/booking/BookingForm";
@@ -12,7 +15,7 @@ export const metadata = {
     "Enquire about beauty studio appointments for makeup, mehndi, nail art and more.",
 };
 
-export default async function BookingPage({ searchParams }) {
+async function BookingContent({ searchParams }) {
   const params = await searchParams;
   const requestedService = params?.service || "";
 
@@ -26,7 +29,6 @@ export default async function BookingPage({ searchParams }) {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#FCF9F5]">
-      {/* Ambient Background */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full bg-[#F1E1E5]/50 blur-3xl"
@@ -42,10 +44,8 @@ export default async function BookingPage({ searchParams }) {
 
         <BookingPageHeader />
 
-        {/* Form + Sidebar */}
         <div className="grid grid-cols-1 items-start gap-7 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-8">
-            {/* Booking Notice */}
             <div className="mb-6 flex items-start gap-3.5 rounded-2xl border border-[#E8D6DC] bg-[#F7F0F1] p-4 sm:p-5">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[#702C45] shadow-sm">
                 <span className="text-lg">i</span>
@@ -76,5 +76,23 @@ export default async function BookingPage({ searchParams }) {
         <BookingTrustStrip />
       </div>
     </main>
+  );
+}
+
+export default function BookingPage({ searchParams }) {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[#FCF9F5] px-4 py-12">
+          <div className="mx-auto max-w-7xl animate-pulse">
+            <div className="h-5 w-40 rounded bg-[#E8D6DC]" />
+            <div className="mt-8 h-12 max-w-md rounded bg-[#E8D6DC]" />
+            <div className="mt-8 h-72 rounded-2xl bg-white" />
+          </div>
+        </main>
+      }
+    >
+      <BookingContent searchParams={searchParams} />
+    </Suspense>
   );
 }

@@ -1,3 +1,6 @@
+
+import { Suspense } from "react";
+
 import ContactPageHeader from "@/components/contact/ContactPageHeader";
 import ContactMethodCards from "@/components/contact/ContactMethodCards";
 import ContactInfo from "@/components/contact/ContactInfo";
@@ -11,7 +14,7 @@ export const metadata = {
     "Contact Beauty Studio for makeup, mehndi, nail art and beauty service enquiries.",
 };
 
-export default async function ContactPage({ searchParams }) {
+async function ContactContent({ searchParams }) {
   const params = await searchParams;
   const requestedService = params?.service || "";
 
@@ -23,7 +26,6 @@ export default async function ContactPage({ searchParams }) {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#FCF9F5]">
-      {/* Ambient Background */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-32 top-20 h-96 w-96 rounded-full bg-[#F1E1E5]/50 blur-3xl"
@@ -35,7 +37,6 @@ export default async function ContactPage({ searchParams }) {
       />
 
       <div className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
-        {/* Page Header */}
         <nav
           aria-label="Breadcrumb"
           className="mb-7 flex items-center gap-2 text-sm text-gray-500"
@@ -43,7 +44,9 @@ export default async function ContactPage({ searchParams }) {
           <a href="/" className="transition hover:text-[#54162F]">
             Home
           </a>
+
           <span>/</span>
+
           <span className="font-semibold text-[#54162F]">
             Contact
           </span>
@@ -51,10 +54,8 @@ export default async function ContactPage({ searchParams }) {
 
         <ContactPageHeader />
 
-        {/* Contact Options */}
         <ContactMethodCards />
 
-        {/* Contact Details + Form */}
         <section className="grid items-start gap-7 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-5">
             <ContactInfo />
@@ -68,5 +69,23 @@ export default async function ContactPage({ searchParams }) {
         </section>
       </div>
     </main>
+  );
+}
+
+export default function ContactPage({ searchParams }) {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[#FCF9F5] px-4 py-12">
+          <div className="mx-auto max-w-7xl animate-pulse">
+            <div className="h-5 w-40 rounded bg-[#E8D6DC]" />
+            <div className="mt-8 h-12 max-w-md rounded bg-[#E8D6DC]" />
+            <div className="mt-8 h-64 rounded-2xl bg-white" />
+          </div>
+        </main>
+      }
+    >
+      <ContactContent searchParams={searchParams} />
+    </Suspense>
   );
 }
